@@ -1,0 +1,137 @@
+\documentclass[a4paper]{article}
+
+\usepackage[swedish]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\def\code#1{\texttt{#1}}
+
+\usepackage{fixltx2e} % \textsubscript{}
+
+% force table placement with  \begin{table}[H]
+\usepackage{float}
+\restylefloat{table}
+
+
+\makeatletter
+\def\verbatim{\small\@verbatim \frenchspacing\@vobeyspaces \@xverbatim}
+\makeatother
+%\usepackage{amsmath}
+%\usepackage{graphicx}
+%\usepackage[colorinlistoftodos]{todonotes}
+
+\title{Laboration 2 \\ 
+Programspråk \\5DV086\\
+VT-14
+}
+
+\author{Emil Palm (c11epm@cs.umu.se) \\  \\ Handledare \\Jan-Erik Moström \\ Petter Ericson}
+
+\begin{document}
+\maketitle
+\newpage
+
+
+\tableofcontents
+
+\newpage
+
+
+
+\section{Inledning}
+Uppgiften var att implementera en "bakvänd" T9-funktion. Utifrån ett givet meddelande skall den kortaste knapptyckningskombinationen för att skapa meddelandet räknas ut.
+Laborationsspecifikationen finns att tillgå här: \url{www8.cs.umu.se/kurser/5dv086/VT14/xlab2.html}
+\section{Åtkomst användarhandledning}\label{ref}
+Källkoden återfinns på datavetenskaps datorer under katalogen \\
+\code{/home/c11/c11epm/5DV086/lab2/}
+
+\subsection{Användning}
+Filen laddas in genom kommandot \code{:l T9.hs} i ghci.
+Programmet har två funktioner som användaren kan använda sig av. calculate och calcMult
+\subsubsection{calculate}
+Funktionen \code{calculate} används sedan för att räkna ut knapptryckningskombinationen för ett meddelande.\\ \\
+\textbf{Användning:} \code{calculate <dictionary> <message>}
+Där \code{dicitionary} är vilken ordlista man vill använda, \code{dictionary} för att använda den givna ordlistan, och \code{message} skall innehålla meddelandet man vill beräkna.
+\subsubsection{calcMult}
+Funktionen \code{calcMult} kan användas för att översätta flera meddelanden vid ett anrop. \\ \\
+\textbf{Användning:} \code{calcMult <dictionary> <messages>}
+I detta anrop fungerar \code{<dictionary>} och \code{<messages>} likt anropet för calculate. Skillnaden är bara att \code{messages} skall innehålla en lista av meddelanden.
+\section{Algoritmbeskrivning}
+\subsection{Hitta rätt knapptryckningskombination}
+Målet med Algoritmen är att hitta den kortaste knapptryckningskombinationen för ett meddelande.
+\begin{enumerate}
+	\item Tag meddelandet och dela upp det i en lista av ord
+	\item För varje ord i listan, räkna ut förjande:
+	\begin{enumerate}
+		\item Ordets korstaste knappkombination, se \ref{eok}
+		\item Finns ordet med i ordlistan, om inte, retunera ett fel
+	\end{enumerate}
+	\item Sätt ihop alla delsträngar med ett mellanrumstecken, i detta fall knapptryckning '0'
+\end{enumerate}
+\subsubsection{Ett ords knappkombination}\label{eok}
+Ett ord kan skrivas på flera sätt. I den givna ordlistan kan tillexempel ordet 'THOSE' ha kombinationerna 8\^{}\^{}\^{}, 84\^{}\^{}, 842\^{} eller 8427 som kortaste kombination. \\ \\
+Denna lösning kommer att räkna hur många bokstäver som skrivs, samt hur många \^{} som används. Detta görs rekursivt då först en knapptryckning av en bokstav görs för att sedan beräkna hur många \^{} som behövs för att hitta rätt ord. Båda dessa antal läggs sedan ihop för att få det totala antalet knapptryckningar. \\ \\ 
+I nästa steg jämförs detta tal mot då två knapptryckningar och sedan beräknar antalet \^{} för att hitta rätt ord. Detta fortsätter sedan nedåt i rekursionen och det minsta antalet totala knapptryckningar väljs.\\ \\
+Kombinationen som väljs retuneras sedan tillbaka som en tupel uppbyggd på följande sätt: \\
+\code{(<knapptryckningar för bokstäver>, <knapptryckningar för att hitta rätt ord i förslagslista>, <lista av vilka knapptryckningar>}
+\\ \\ \text{Exempel:} För ordet 'THOSE' kommer denna lösning retunera tupeln (4,0,[8,4,2,7]). Dvs ordet 'THOSE' har korstaste kombinationen fyra siffror samt noll \^{} och siffrorna som bygger upp ordet är [8,4,2,7].
+\\ \\ \textit{Användningen av \^{} finns förklarad i laborationsspecifikationen som finns länkad i \ref{ref}.}
+
+
+\section{Lösningens begränsningar}
+Lösningen är inte implementerad med någon tanke på effektivitet eller hårdvarukrav såsom exempelvis lite RAM-minne, då lösningen använder sin av långa och djupa rekursioner kan det bli resurskrävande för längre meddelanden och större ordlistor. 
+Om användaren vill använda funktionen \code{calcMult} som tar en lista av meddelanden så märks det att det tar lite tid att lösa uppgiften.
+\newpage
+\section{Testkörningar}\label{test}
+\subsection{calculate}
+I testkörningen testas implementationen mot referensmeddelandet och dess översättning.
+Som kan ses nedan så ges inte exakt samma lösning, men längden på lösningen är lika lång som referensen. Dvs, de ger tillbaka samma antal knapptryckningar. \\ \\
+Meddelande tolv plockas ut ur meddelandelistan och skrivs ut för att visa att det är referensmeddelandet.\\
+Funktionen calculate används sedan för att räknaut knapptryckningskombinationen. \\
+Längden för kombinationen blir 45 knapptryckningar.\\
+Referensmeddelandets knapptryckningskombination skrivs ut och längden på denna beräknas.\\
+De båda längderna stämmer överens!
+
+\begin{verbatim}
+*Main> let message = messages !! 11
+*Main> message
+THOSE WHO DO NOT HAVE GOALS ARE DOOMED TO WORK FOR THOSE WHO DO
+*Main> calculate dictionary message
+"846709460306042046027036608096703^08467094603"
+*Main> length $ calculate dictionary message
+45
+*Main> facit
+"846^094^030604^04602^036608096703^0846^094^03"
+*Main> length facit 
+45
+\end{verbatim}
+\subsection{calcMult}
+\textit{OBS, extra radbrytningar är insatta i exemplet för att öka läsligheten}\\
+De tre första meddelandena tas ut från meddelandelistan och skrivs sedan ut.\\
+calcMult används sedan tillsammans med den givna ordlistan med de tre första meddelandena.\\
+Resultatet retuneras som tupler på förlande sätt: \\ 
+\code{(<knapptryckningskombination>, <meddelande>)} \\ \\
+\code{*T9> let multMess = [(messages!!0)]++[(messages!!1)]++[(messages!!2)]}\\ \\ 
+\code{*T9> multMess}\\
+\code{[THERE IS NO SUBSTITUTE FOR HARD WORK,}\\
+\code{THE SHORTEST WAY TO DO MANY THINGS IS TO DO A SINGLE THING AT A TIME,}\\
+\code{UNDERTAKE NOT WHAT YOU CANNOT PERFORM BUT BE CAREFUL TO KEEP YOUR PROMISE]}\\ \\
+\code{*T9> calcMult dictionary multMess }\\
+\code{[(843704066\^{}\^{}\^{}0782703\^{}042730967,}\\
+\code{THERE IS NO SUBSTITUTE FOR HARD WORK),}\\
+\code{(84074092080306269084404080302074640844\^{}028020846,}\\
+\code{THE SHORTEST WAY TO DO MANY THINGS IS TO DO A SINGLE THING AT A TIME),}\\
+\code{(8630609409022607370288023022730805309\^{}0776,}\\
+\code{UNDERTAKE NOT WHAT YOU CANNOT PERFORM BUT BE CAREFUL TO KEEP YOUR PROMISE)]}\\
+
+\subsection{Ord som inte finns med i ordlistan}
+Ord som inte finns med i en ordlista skall skrivas ut som ett ? istället.\\
+\code{*T9> calculate dictionary "SOME OF THESE WORDS ARE NOT IN THE DICTIONARY"}
+\code{?0630?0?02706046\^{}\^{}0840?}
+\section{Diskussion}
+Min implemantation av denna T9-funktion skall möta vissa grundkrav och restriktioner. Dessa finns att se i laborationsspecifikationen länkad i \ref{ref}. Min implementation stöjder och följer alla dessa krav, detta kan ses i Testkörningar \ref{test}
+
+\end{document}
+

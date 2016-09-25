@@ -1,0 +1,15 @@
+\select@language {swedish}
+\contentsline {section}{\numberline {1}Inledning}{3}{section.1}
+\contentsline {section}{\numberline {2}\IeC {\r A}tkomst anv\IeC {\"a}ndarhandledning}{3}{section.2}
+\contentsline {subsection}{\numberline {2.1}Anv\IeC {\"a}ndning}{3}{subsection.2.1}
+\contentsline {subsubsection}{\numberline {2.1.1}calculate}{3}{subsubsection.2.1.1}
+\contentsline {subsubsection}{\numberline {2.1.2}calcMult}{3}{subsubsection.2.1.2}
+\contentsline {section}{\numberline {3}Algoritmbeskrivning}{3}{section.3}
+\contentsline {subsection}{\numberline {3.1}Hitta r\IeC {\"a}tt knapptryckningskombination}{3}{subsection.3.1}
+\contentsline {subsubsection}{\numberline {3.1.1}Ett ords knappkombination}{4}{subsubsection.3.1.1}
+\contentsline {section}{\numberline {4}L\IeC {\"o}sningens begr\IeC {\"a}nsningar}{4}{section.4}
+\contentsline {section}{\numberline {5}Testk\IeC {\"o}rningar}{5}{section.5}
+\contentsline {subsection}{\numberline {5.1}calculate}{5}{subsection.5.1}
+\contentsline {subsection}{\numberline {5.2}calcMult}{5}{subsection.5.2}
+\contentsline {subsection}{\numberline {5.3}Ord som inte finns med i ordlistan}{6}{subsection.5.3}
+\contentsline {section}{\numberline {6}Diskussion}{6}{section.6}
